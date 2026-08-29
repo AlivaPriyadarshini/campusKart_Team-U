@@ -2,43 +2,78 @@
 
 require_once "../config/database.php";
 
+
+/* ==========================================
+   CHECK ADMIN LOGIN
+   ========================================== */
+
 if (!isset($_SESSION['admin'])) {
     header("Location: login.php");
     exit;
 }
 
-$productCount =
-    $conn->query("SELECT COUNT(*) AS total FROM products")
-         ->fetch_assoc()['total'];
 
-$orderCount =
-    $conn->query("SELECT COUNT(*) AS total FROM orders")
-         ->fetch_assoc()['total'];
+/* ==========================================
+   COUNT PRODUCTS
+   ========================================== */
+
+$productResult = $conn->query(
+    "SELECT COUNT(*) AS total FROM products"
+);
+
+if (!$productResult) {
+    die("Unable to count products: " . $conn->error);
+}
+
+$productCount = $productResult->fetch_assoc()['total'];
+
+
+/* ==========================================
+   COUNT ORDERS
+   ========================================== */
+
+$orderResult = $conn->query(
+    "SELECT COUNT(*) AS total FROM orders"
+);
+
+if (!$orderResult) {
+    die("Unable to count orders: " . $conn->error);
+}
+
+$orderCount = $orderResult->fetch_assoc()['total'];
 
 ?>
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
 
 <head>
 
     <meta charset="UTF-8">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>Admin Dashboard</title>
 
-    <link rel="stylesheet" href="../css/style.css">
+    <link
+        rel="stylesheet"
+        href="../css/style.css"
+    >
 
 </head>
 
+
 <body>
+
 
 <header class="admin-nav">
 
     <h2>CampusKart Admin</h2>
+
 
     <nav>
 
@@ -46,17 +81,23 @@ $orderCount =
             Dashboard
         </a>
 
-        <a href="products.php">
+
+        <!-- Correct file name -->
+        <a href="product.php">
             Products
         </a>
 
-        <a href="add-product.php">
+
+        <!-- Correct file name -->
+        <a href="add_product.php">
             Add Product
         </a>
+
 
         <a href="../index.php">
             Website
         </a>
+
 
         <a href="login.php?logout=1">
             Logout
@@ -71,31 +112,37 @@ $orderCount =
 
     <h1>Dashboard</h1>
 
+
     <div class="stats">
+
 
         <div class="stat-card">
 
             <h2>
-                <?= $productCount ?>
+                <?= htmlspecialchars($productCount) ?>
             </h2>
 
             <p>Total Products</p>
 
         </div>
 
+
         <div class="stat-card">
 
             <h2>
-                <?= $orderCount ?>
+                <?= htmlspecialchars($orderCount) ?>
             </h2>
 
             <p>Total Orders</p>
 
         </div>
 
+
     </div>
 
 </section>
 
+
 </body>
+
 </html>

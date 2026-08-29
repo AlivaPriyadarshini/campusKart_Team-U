@@ -2,39 +2,61 @@
 
 require_once "../config/database.php";
 
+
+/* ==========================================
+   CHECK ADMIN LOGIN
+   ========================================== */
+
 if (!isset($_SESSION['admin'])) {
     header("Location: login.php");
     exit;
 }
 
+
+/* ==========================================
+   GET PRODUCTS
+   ========================================== */
+
 $result = $conn->query(
     "SELECT * FROM products ORDER BY id DESC"
 );
+
+if (!$result) {
+    die("Unable to load products: " . $conn->error);
+}
 
 ?>
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
 
 <head>
 
     <meta charset="UTF-8">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>Manage Products</title>
 
-    <link rel="stylesheet" href="../css/style.css">
+    <link
+        rel="stylesheet"
+        href="../css/style.css"
+    >
 
 </head>
 
+
 <body>
+
 
 <header class="admin-nav">
 
     <h2>CampusKart Admin</h2>
+
 
     <nav>
 
@@ -42,11 +64,15 @@ $result = $conn->query(
             Dashboard
         </a>
 
-        <a href="products.php">
+
+        <!-- Correct filename -->
+        <a href="product.php">
             Products
         </a>
 
-        <a href="add-product.php">
+
+        <!-- Correct filename -->
+        <a href="add_product.php">
             Add Product
         </a>
 
@@ -57,11 +83,16 @@ $result = $conn->query(
 
 <section class="section">
 
+
     <div class="admin-heading">
 
         <h1>Manage Products</h1>
 
-        <a href="add-product.php" class="btn">
+
+        <a
+            href="add_product.php"
+            class="btn"
+        >
             + Add Product
         </a>
 
@@ -70,7 +101,9 @@ $result = $conn->query(
 
     <div class="table-container">
 
+
         <table>
+
 
             <thead>
 
@@ -87,65 +120,109 @@ $result = $conn->query(
 
             </thead>
 
+
             <tbody>
 
-            <?php while ($product = $result->fetch_assoc()): ?>
+
+            <?php if ($result->num_rows > 0): ?>
+
+
+                <?php while ($product = $result->fetch_assoc()): ?>
+
+
+                    <tr>
+
+
+                        <td>
+                            <?= (int)$product['id'] ?>
+                        </td>
+
+
+                        <td>
+                            <?= htmlspecialchars(
+                                $product['name']
+                            ) ?>
+                        </td>
+
+
+                        <td>
+                            <?= htmlspecialchars(
+                                $product['category']
+                            ) ?>
+                        </td>
+
+
+                        <td>
+                            ₹<?= number_format(
+                                (float)$product['price'],
+                                2
+                            ) ?>
+                        </td>
+
+
+                        <td>
+                            <?= (int)$product['stock'] ?>
+                        </td>
+
+
+                        <td>
+
+
+                            <!-- Edit -->
+                            <a
+                                href="edit_product.php?id=<?= (int)$product['id'] ?>"
+                                class="edit"
+                            >
+                                Edit
+                            </a>
+
+
+                            <!-- Delete -->
+                            <a
+                                href="delete_product.php?id=<?= (int)$product['id'] ?>"
+                                class="delete"
+                                onclick="return confirm('Delete this product?')"
+                            >
+                                Delete
+                            </a>
+
+
+                        </td>
+
+
+                    </tr>
+
+
+                <?php endwhile; ?>
+
+
+            <?php else: ?>
+
 
                 <tr>
 
-                    <td>
-                        <?= $product['id'] ?>
-                    </td>
-
-                    <td>
-                        <?= htmlspecialchars($product['name']) ?>
-                    </td>
-
-                    <td>
-                        <?= htmlspecialchars($product['category']) ?>
-                    </td>
-
-                    <td>
-                        ₹<?= number_format(
-                            $product['price'],
-                            2
-                        ) ?>
-                    </td>
-
-                    <td>
-                        <?= $product['stock'] ?>
-                    </td>
-
-                    <td>
-
-                        <a
-                            href="edit-product.php?id=<?= $product['id'] ?>"
-                            class="edit"
-                        >
-                            Edit
-                        </a>
-
-                        <a
-                            href="delete-product.php?id=<?= $product['id'] ?>"
-                            class="delete"
-                            onclick="return confirm('Delete this product?')"
-                        >
-                            Delete
-                        </a>
-
+                    <td colspan="6">
+                        No products found.
                     </td>
 
                 </tr>
 
-            <?php endwhile; ?>
+
+            <?php endif; ?>
+
 
             </tbody>
 
+
         </table>
+
 
     </div>
 
+
 </section>
 
+
 </body>
+
 </html>
