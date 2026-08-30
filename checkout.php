@@ -415,7 +415,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <link
         rel="stylesheet"
-        href="css/style.css"
+        href="css/checkout.css"
     >
 
 </head>
@@ -424,11 +424,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
 
 
+<!-- ==========================================
+     NAVBAR
+========================================== -->
+
 <header class="navbar">
 
 
     <div class="logo">
-        Campus<span>Kart</span>
+        <img src="./image/WhatsApp Image 2026-08-29 at 12.40.25 PM.jpeg"
+            alt="CampusKart Logo">
     </div>
 
 
@@ -445,7 +450,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
         <a href="cart.php">
-            Cart
+            Cart 🛒
         </a>
 
     </nav>
@@ -454,15 +459,68 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </header>
 
 
-<section class="section">
+
+<!-- ==========================================
+     CHECKOUT PAGE
+========================================== -->
+
+<section class="checkout-page">
 
 
-    <div class="checkout">
+    <!-- PAGE HEADER -->
+
+    <div class="checkout-header">
+
+        <span class="section-label">
+            CAMPUSKART CHECKOUT
+        </span>
+
+        <h1>
+            Complete Your Order
+        </h1>
+
+        <p>
+            Just a few details and your campus essentials
+            will be ready to go.
+        </p>
+
+    </div>
 
 
-        <div>
 
-            <h1>Checkout</h1>
+    <!-- ==========================================
+         CHECKOUT LAYOUT
+    =========================================== -->
+
+    <div class="checkout-layout">
+
+
+        <!-- ======================================
+             CUSTOMER DETAILS
+        ====================================== -->
+
+        <div class="checkout-form-box">
+
+
+            <div class="form-heading">
+
+                <div class="form-icon">
+                    👤
+                </div>
+
+                <div>
+
+                    <h2>
+                        Delivery Details
+                    </h2>
+
+                    <p>
+                        Enter your information below
+                    </p>
+
+                </div>
+
+            </div>
 
 
             <?php if ($error): ?>
@@ -477,52 +535,104 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <form method="POST">
 
 
-                <input
-                    type="text"
-                    name="name"
-                    placeholder="Full Name"
-                    value="<?= htmlspecialchars(
-                        $_POST['name'] ?? ''
-                    ) ?>"
-                    required
-                >
+                <!-- FULL NAME -->
+
+                <div class="input-group">
+
+                    <label for="name">
+                        Full Name
+                    </label>
+
+                    <input
+                        id="name"
+                        type="text"
+                        name="name"
+                        placeholder="Enter your full name"
+                        value="<?= htmlspecialchars(
+                            $_POST['name'] ?? ''
+                        ) ?>"
+                        required
+                    >
+
+                </div>
 
 
-                <input
-                    type="email"
-                    name="email"
-                    placeholder="Email Address"
-                    value="<?= htmlspecialchars(
-                        $_POST['email'] ?? ''
-                    ) ?>"
-                    required
-                >
+
+                <!-- EMAIL -->
+
+                <div class="input-group">
+
+                    <label for="email">
+                        Email Address
+                    </label>
+
+                    <input
+                        id="email"
+                        type="email"
+                        name="email"
+                        placeholder="Enter your email address"
+                        value="<?= htmlspecialchars(
+                            $_POST['email'] ?? ''
+                        ) ?>"
+                        required
+                    >
+
+                </div>
 
 
-                <input
-                    type="text"
-                    name="phone"
-                    placeholder="Phone Number"
-                    value="<?= htmlspecialchars(
-                        $_POST['phone'] ?? ''
-                    ) ?>"
-                >
+
+                <!-- PHONE -->
+
+                <div class="input-group">
+
+                    <label for="phone">
+                        Phone Number
+                    </label>
+
+                    <input
+                        id="phone"
+                        type="text"
+                        name="phone"
+                        placeholder="Enter your phone number"
+                        value="<?= htmlspecialchars(
+                            $_POST['phone'] ?? ''
+                        ) ?>"
+                    >
+
+                </div>
 
 
-                <textarea
-                    name="address"
-                    placeholder="Delivery Address"
-                    required
-                ><?= htmlspecialchars(
-                    $_POST['address'] ?? ''
-                ) ?></textarea>
 
+                <!-- ADDRESS -->
+
+                <div class="input-group">
+
+                    <label for="address">
+                        Delivery Address
+                    </label>
+
+                    <textarea
+                        id="address"
+                        name="address"
+                        placeholder="Enter your complete delivery address"
+                        required
+                    ><?= htmlspecialchars(
+                        $_POST['address'] ?? ''
+                    ) ?></textarea>
+
+                </div>
+
+
+
+                <!-- ORDER BUTTON -->
 
                 <button
-                    class="btn"
+                    class="btn place-order-btn"
                     type="submit"
                 >
-                    Place Order
+
+                    Place Order →
+
                 </button>
 
 
@@ -532,47 +642,153 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
 
 
+
+        <!-- ======================================
+             ORDER SUMMARY
+        ====================================== -->
+
         <div class="order-summary">
 
 
-            <h2>Order Summary</h2>
+            <div class="summary-top">
+
+                <span class="section-label">
+                    YOUR ORDER
+                </span>
+
+                <h2>
+                    Order Summary
+                </h2>
+
+            </div>
 
 
-            <?php foreach ($cartProducts as $product): ?>
+
+            <!-- PRODUCTS -->
+
+            <div class="summary-products">
 
 
-                <p>
-
-                    <?= htmlspecialchars(
-                        $product['name']
-                    ) ?>
-
-                    × <?= (int)$product['quantity'] ?>
-
-                    = ₹<?= number_format(
-                        (float)$product['subtotal'],
-                        2
-                    ) ?>
-
-                </p>
+                <?php foreach ($cartProducts as $product): ?>
 
 
-            <?php endforeach; ?>
+                    <div class="summary-product">
+
+
+                        <div class="summary-product-info">
+
+                            <h3>
+
+                                <?= htmlspecialchars(
+                                    $product['name']
+                                ) ?>
+
+                            </h3>
+
+                            <p>
+
+                                Quantity:
+                                <?= (int)$product['quantity'] ?>
+
+                            </p>
+
+                        </div>
+
+
+                        <strong>
+
+                            ₹<?= number_format(
+                                (float)$product['subtotal'],
+                                2
+                            ) ?>
+
+                        </strong>
+
+
+                    </div>
+
+
+                <?php endforeach; ?>
+
+
+            </div>
+
+
+
+            <!-- SUMMARY DETAILS -->
+
+            <div class="summary-details">
+
+
+                <div class="summary-row">
+
+                    <span>
+                        Items
+                    </span>
+
+                    <span>
+                        Included
+                    </span>
+
+                </div>
+
+
+                <div class="summary-row">
+
+                    <span>
+                        Delivery
+                    </span>
+
+                    <span class="free">
+                        Student Friendly
+                    </span>
+
+                </div>
+
+
+            </div>
+
 
 
             <hr>
 
 
-            <h2>
 
-                Total:
+            <!-- TOTAL -->
 
-                ₹<?= number_format(
-                    $total,
-                    2
-                ) ?>
+            <div class="summary-total">
 
-            </h2>
+                <span>
+                    Total Amount
+                </span>
+
+                <strong>
+
+                    ₹<?= number_format(
+                        $total,
+                        2
+                    ) ?>
+
+                </strong>
+
+            </div>
+
+
+
+            <!-- SECURITY MESSAGE -->
+
+            <div class="secure-message">
+
+                <span>
+                    🔒
+                </span>
+
+                <p>
+                    Your order details are handled
+                    securely.
+                </p>
+
+            </div>
 
 
         </div>
@@ -582,6 +798,207 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
 </section>
+
+
+
+<!-- ==========================================
+     CHECKOUT BENEFITS
+========================================== -->
+
+<section class="checkout-benefits">
+
+
+    <div class="benefit">
+
+
+        <div class="benefit-icon">
+            🎓
+        </div>
+
+
+        <div>
+
+            <h3>
+                Built For Students
+            </h3>
+
+            <p>
+                Shopping made simple for campus life.
+            </p>
+
+        </div>
+
+
+    </div>
+
+
+
+    <div class="benefit">
+
+
+        <div class="benefit-icon">
+            💰
+        </div>
+
+
+        <div>
+
+            <h3>
+                Student Friendly
+            </h3>
+
+            <p>
+                Affordable products for everyday needs.
+            </p>
+
+        </div>
+
+
+    </div>
+
+
+
+    <div class="benefit">
+
+
+        <div class="benefit-icon">
+            🔒
+        </div>
+
+
+        <div>
+
+            <h3>
+                Simple & Secure
+            </h3>
+
+            <p>
+                A straightforward checkout experience.
+            </p>
+
+        </div>
+
+
+    </div>
+
+
+</section>
+
+
+
+<!-- ==========================================
+     FOOTER
+========================================== -->
+
+<footer>
+
+
+    <div class="footer-container">
+
+
+        <div class="footer-brand">
+
+            <h2>
+                Campus<span>Kart</span>
+            </h2>
+
+            <p>
+                Your student marketplace for affordable,
+                useful and reliable campus essentials.
+            </p>
+
+        </div>
+
+
+        <div class="footer-column">
+
+            <h3>
+                Quick Links
+            </h3>
+
+            <a href="index.php">
+                Home
+            </a>
+
+            <a href="product.php">
+                Products
+            </a>
+
+            <a href="cart.php">
+                Cart
+            </a>
+
+        </div>
+
+
+        <div class="footer-column">
+
+            <h3>
+                Categories
+            </h3>
+
+            <p>
+                Stationery
+            </p>
+
+            <p>
+                Electronics
+            </p>
+
+            <p>
+                Fashion
+            </p>
+
+            <p>
+                Bags
+            </p>
+
+        </div>
+
+
+        <div class="footer-column">
+
+            <h3>
+                CampusKart
+            </h3>
+
+            <p>
+                Student Focused
+            </p>
+
+            <p>
+                Affordable
+            </p>
+
+            <p>
+                Easy Shopping
+            </p>
+
+            <p>
+                Quality Products
+            </p>
+
+        </div>
+
+
+    </div>
+
+
+
+    <div class="footer-bottom">
+
+        <p>
+            © 2026 CampusKart
+        </p>
+
+        <p>
+            Student E-Commerce Platform
+        </p>
+
+    </div>
+
+
+</footer>
 
 
 </body>

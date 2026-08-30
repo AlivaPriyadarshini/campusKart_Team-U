@@ -137,7 +137,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <link
         rel="stylesheet"
-        href="../css/style.css"
+        href="../css/login.css"
     >
 
 </head>
@@ -146,16 +146,52 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
 
 
+<!-- ==========================================
+     LOGIN PAGE
+     ========================================== -->
+
 <div class="login-page">
 
+
+    <!-- ==========================================
+         LOGIN CARD
+         ========================================== -->
 
     <form
         class="login-box"
         method="POST"
     >
 
-        <h1>CampusKart Admin</h1>
 
+        <!-- Logo -->
+
+        <div class="admin-logo">
+            <img src="../image/WhatsApp Image 2026-08-29 at 12.40.25 PM.jpeg"
+                alt="CampusKart Logo">
+        </div>
+
+
+        <!-- Heading -->
+
+        <p class="login-label">
+            CAMPUSKART ADMIN
+        </p>
+
+
+        <h1>
+            Welcome Back 👋
+        </h1>
+
+
+        <p class="login-description">
+            Sign in to manage your CampusKart marketplace.
+        </p>
+
+
+
+        <!-- ==========================================
+             ERROR MESSAGE
+             ========================================== -->
 
         <?php if ($error): ?>
 
@@ -166,35 +202,91 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php endif; ?>
 
 
-        <input
-            type="text"
-            name="username"
-            placeholder="Username"
-            value="<?= htmlspecialchars($_POST['username'] ?? '') ?>"
-            required
-        >
+
+        <!-- ==========================================
+             USERNAME
+             ========================================== -->
+
+        <div class="input-group">
+
+            <label for="username">
+                Username
+            </label>
+
+            <input
+                id="username"
+                type="text"
+                name="username"
+                placeholder="Enter your username"
+                value="<?= htmlspecialchars($_POST['username'] ?? '') ?>"
+                required
+            >
+
+        </div>
 
 
-        <input
-            type="password"
-            name="password"
-            placeholder="Password"
-            required
-        >
 
+        <!-- ==========================================
+             PASSWORD
+             ========================================== -->
+
+        <div class="input-group">
+
+            <label for="password">
+                Password
+            </label>
+
+            <input
+                id="password"
+                type="password"
+                name="password"
+                placeholder="Enter your password"
+                required
+            >
+
+        </div>
+
+
+
+        <!-- Login Button -->
 
         <button
             class="btn"
             type="submit"
         >
-            Login
+            Login to Dashboard
         </button>
 
 
-        <p>
-            Default:
-            <strong>admin / admin123</strong>
-        </p>
+
+        <!-- Demo Login -->
+
+        <div class="demo-login">
+
+            <p>
+                Demo Login
+            </p>
+
+            <span>
+                Username: <strong>admin</strong>
+            </span>
+
+            <span>
+                Password: <strong>admin123</strong>
+            </span>
+
+        </div>
+
+
+
+        <!-- Back to Website -->
+
+        <a
+            href="../index.php"
+            class="back-home"
+        >
+            ← Back to CampusKart
+        </a>
 
 
     </form>

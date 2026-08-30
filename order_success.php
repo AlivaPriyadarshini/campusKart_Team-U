@@ -78,7 +78,7 @@ if (!$order) {
 
     <link
         rel="stylesheet"
-        href="css/style.css"
+        href="css/order_success.css"
     >
 
 </head>
@@ -87,15 +87,35 @@ if (!$order) {
 <body>
 
 
+<!-- ==========================================
+     SUCCESS PAGE
+========================================== -->
+
 <div class="success-page">
 
+
+    <!-- ======================================
+         SUCCESS CARD
+    ====================================== -->
 
     <div class="success-box">
 
 
+        <!-- SUCCESS ICON -->
+
         <div class="success-icon">
+
             ✓
+
         </div>
+
+
+
+        <!-- MAIN MESSAGE -->
+
+        <span class="success-label">
+            ORDER CONFIRMED
+        </span>
 
 
         <h1>
@@ -103,48 +123,88 @@ if (!$order) {
         </h1>
 
 
-        <p>
+        <p class="success-message">
             Thank you for shopping with CampusKart.
+            Your campus essentials are on their way!
         </p>
 
 
-        <p>
-            Your order has been placed successfully.
-        </p>
+
+        <!-- ==================================
+             ORDER INFORMATION
+        ================================== -->
+
+        <div class="order-info">
 
 
-        <p>
+            <div class="info-item">
 
-            Your Order ID:
+                <span>
+                    Order ID
+                </span>
 
-            <strong>
-                #<?= (int)$order['id'] ?>
-            </strong>
+                <strong>
+                    #<?= (int)$order['id'] ?>
+                </strong>
 
-        </p>
-
-
-        <p>
-
-            Total:
-
-            <strong>
-                ₹<?= number_format(
-                    (float)$order['total'],
-                    2
-                ) ?>
-            </strong>
-
-        </p>
+            </div>
 
 
-        <!-- Correct filename -->
+
+            <div class="info-item">
+
+                <span>
+                    Total Amount
+                </span>
+
+                <strong>
+                    ₹<?= number_format(
+                        (float)$order['total'],
+                        2
+                    ) ?>
+                </strong>
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- SUCCESS NOTE -->
+
+        <div class="success-note">
+
+            <span>
+                🎓
+            </span>
+
+            <p>
+                Your order has been placed successfully.
+                Thank you for choosing CampusKart!
+            </p>
+
+        </div>
+
+
+
+        <!-- CONTINUE SHOPPING -->
 
         <a
             href="product.php"
             class="btn"
         >
-            Continue Shopping
+            Continue Shopping →
+        </a>
+
+
+        <!-- HOME LINK -->
+
+        <a
+            href="index.php"
+            class="home-link"
+        >
+            Back to Home
         </a>
 
 
@@ -152,6 +212,23 @@ if (!$order) {
 
 
 </div>
+
+
+<!-- ==========================================
+     FOOTER
+========================================== -->
+
+<footer>
+
+    <p>
+        © 2026 CampusKart
+    </p>
+
+    <span>
+        Student E-Commerce Platform
+    </span>
+
+</footer>
 
 
 </body>

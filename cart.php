@@ -134,7 +134,7 @@ $total = 0;
 
     <link
         rel="stylesheet"
-        href="css/style.css"
+        href="css/cart.css"
     >
 
 </head>
@@ -143,10 +143,15 @@ $total = 0;
 <body>
 
 
+<!-- ==========================================
+     NAVBAR
+========================================== -->
+
 <header class="navbar">
 
     <div class="logo">
-        Campus<span>Kart</span>
+        <img src="./image/WhatsApp Image 2026-08-29 at 12.40.25 PM.jpeg"
+            alt="CampusKart Logo">
     </div>
 
 
@@ -156,14 +161,11 @@ $total = 0;
             Home
         </a>
 
-
-        <!-- Correct filename -->
         <a href="product.php">
             Products
         </a>
 
-
-        <a href="cart.php">
+        <a href="cart.php" class="active">
             Cart 🛒
         </a>
 
@@ -172,28 +174,72 @@ $total = 0;
 </header>
 
 
-<section class="section">
+
+<!-- ==========================================
+     CART PAGE
+========================================== -->
+
+<section class="cart-page">
 
 
-    <h1>Your Shopping Cart</h1>
+    <!-- PAGE HEADER -->
+
+    <div class="cart-header">
+
+        <div>
+
+            <span class="section-label">
+                CAMPUSKART
+            </span>
+
+            <h1>
+                Your Shopping Cart
+            </h1>
+
+            <p>
+                Review your selected products before
+                completing your order.
+            </p>
+
+        </div>
+
+
+        <div class="cart-icon">
+            🛒
+        </div>
+
+    </div>
+
 
 
     <?php if (empty($_SESSION['cart'])): ?>
 
 
+        <!-- ==========================================
+             EMPTY CART
+        ========================================== -->
+
         <div class="empty-cart">
 
+            <div class="empty-cart-icon">
+                🛒
+            </div>
+
             <h2>
-                Your cart is empty 🛒
+                Your Cart is Empty
             </h2>
 
+            <p>
+                Looks like you haven't added anything yet.
+                Explore our products and find something
+                useful for your campus life.
+            </p>
 
-            <!-- Correct filename -->
             <a
                 href="product.php"
                 class="btn"
             >
-                Start Shopping
+                Start Shopping →
             </a>
 
         </div>
@@ -202,154 +248,351 @@ $total = 0;
     <?php else: ?>
 
 
-        <div class="cart-container">
+        <!-- ==========================================
+             CART CONTENT
+        ========================================== -->
+
+        <div class="cart-layout">
 
 
-            <?php foreach ($_SESSION['cart'] as $id => $quantity): ?>
+            <!-- ======================================
+                 CART ITEMS
+            ====================================== -->
+
+            <div class="cart-products">
 
 
-                <?php
+                <div class="cart-products-header">
 
-                $id = intval($id);
-                $quantity = intval($quantity);
+                    <h2>
+                        Cart Items
+                    </h2>
 
+                    <span>
+                        Your Selected Products
+                    </span>
 
-                /* Get product */
-
-                $stmt = $conn->prepare(
-                    "SELECT * FROM products WHERE id = ?"
-                );
-
-
-                if (!$stmt) {
-                    die("Database error: " . $conn->error);
-                }
+                </div>
 
 
-                $stmt->bind_param(
-                    "i",
-                    $id
-                );
+
+                <div class="cart-container">
 
 
-                if (!$stmt->execute()) {
-                    die("Unable to load product: " . $stmt->error);
-                }
+                    <?php foreach ($_SESSION['cart'] as $id => $quantity): ?>
 
 
-                $product =
-                    $stmt->get_result()->fetch_assoc();
+                        <?php
 
-                $stmt->close();
-
-
-                /* Remove deleted products */
-
-                if (!$product) {
-
-                    unset($_SESSION['cart'][$id]);
-
-                    continue;
-                }
+                        $id = intval($id);
+                        $quantity = intval($quantity);
 
 
-                /* Make sure quantity is valid */
+                        /* Get product */
 
-                if ($quantity < 1) {
-
-                    unset($_SESSION['cart'][$id]);
-
-                    continue;
-                }
+                        $stmt = $conn->prepare(
+                            "SELECT * FROM products WHERE id = ?"
+                        );
 
 
-                /* Prevent cart from exceeding stock */
-
-                if ($quantity > (int)$product['stock']) {
-
-                    $quantity = (int)$product['stock'];
-
-                    $_SESSION['cart'][$id] = $quantity;
-                }
+                        if (!$stmt) {
+                            die("Database error: " . $conn->error);
+                        }
 
 
-                /* If stock is zero, remove item */
-
-                if ($quantity <= 0) {
-
-                    unset($_SESSION['cart'][$id]);
-
-                    continue;
-                }
+                        $stmt->bind_param(
+                            "i",
+                            $id
+                        );
 
 
-                $subtotal =
-                    (float)$product['price'] * $quantity;
+                        if (!$stmt->execute()) {
+                            die("Unable to load product: " . $stmt->error);
+                        }
 
 
-                $total += $subtotal;
+                        $product =
+                            $stmt->get_result()->fetch_assoc();
 
-                ?>
-
-
-                <div class="cart-item">
+                        $stmt->close();
 
 
-                    <img
-                        src="<?= htmlspecialchars(
-                            $product['image'] ?? ''
-                        ) ?>"
-                        alt="<?= htmlspecialchars(
-                            $product['name']
-                        ) ?>"
-                    >
+                        /* Remove deleted products */
+
+                        if (!$product) {
+
+                            unset($_SESSION['cart'][$id]);
+
+                            continue;
+                        }
 
 
-                    <div>
+                        /* Make sure quantity is valid */
+
+                        if ($quantity < 1) {
+
+                            unset($_SESSION['cart'][$id]);
+
+                            continue;
+                        }
 
 
-                        <h3>
-                            <?= htmlspecialchars(
-                                $product['name']
-                            ) ?>
-                        </h3>
+                        /* Prevent cart from exceeding stock */
+
+                        if ($quantity > (int)$product['stock']) {
+
+                            $quantity = (int)$product['stock'];
+
+                            $_SESSION['cart'][$id] = $quantity;
+                        }
 
 
-                        <p>
+                        /* If stock is zero, remove item */
 
-                            ₹<?= number_format(
-                                (float)$product['price'],
-                                2
-                            ) ?>
+                        if ($quantity <= 0) {
 
-                            ×
+                            unset($_SESSION['cart'][$id]);
 
-                            <?= $quantity ?>
+                            continue;
+                        }
 
-                        </p>
 
+                        $subtotal =
+                            (float)$product['price'] * $quantity;
+
+
+                        $total += $subtotal;
+
+                        ?>
+
+
+                        <!-- ==================================
+                             CART ITEM
+                        ================================== -->
+
+                        <div class="cart-item">
+
+
+                            <!-- PRODUCT IMAGE -->
+
+                            <div class="cart-item-image">
+
+                                <img
+                                    src="<?= htmlspecialchars(
+                                        $product['image'] ?? ''
+                                    ) ?>"
+                                    alt="<?= htmlspecialchars(
+                                        $product['name']
+                                    ) ?>"
+                                >
+
+                            </div>
+
+
+
+                            <!-- PRODUCT INFORMATION -->
+
+                            <div class="cart-item-info">
+
+
+                                <span class="category">
+
+                                    <?= htmlspecialchars(
+                                        $product['category']
+                                        ?? 'Campus Essential'
+                                    ) ?>
+
+                                </span>
+
+
+                                <h3>
+
+                                    <?= htmlspecialchars(
+                                        $product['name']
+                                    ) ?>
+
+                                </h3>
+
+
+                                <p class="item-price">
+
+                                    ₹<?= number_format(
+                                        (float)$product['price'],
+                                        2
+                                    ) ?>
+
+                                    per item
+
+                                </p>
+
+
+                                <div class="item-quantity">
+
+                                    <span>
+                                        Quantity:
+                                    </span>
+
+                                    <strong>
+                                        <?= $quantity ?>
+                                    </strong>
+
+                                </div>
+
+
+                                <a
+                                    href="cart.php?remove=<?= (int)$id ?>"
+                                    class="remove"
+                                    onclick="return confirm('Remove this product from cart?')"
+                                >
+                                    🗑 Remove
+                                </a>
+
+
+                            </div>
+
+
+
+                            <!-- SUBTOTAL -->
+
+                            <div class="item-subtotal">
+
+                                <span>
+                                    Subtotal
+                                </span>
+
+                                <strong>
+
+                                    ₹<?= number_format(
+                                        $subtotal,
+                                        2
+                                    ) ?>
+
+                                </strong>
+
+                            </div>
+
+
+                        </div>
+
+
+                    <?php endforeach; ?>
+
+
+                </div>
+
+
+                <!-- CONTINUE SHOPPING -->
+
+                <a
+                    href="product.php"
+                    class="continue-shopping"
+                >
+                    ← Continue Shopping
+                </a>
+
+
+            </div>
+
+
+
+            <!-- ======================================
+                 ORDER SUMMARY
+            ====================================== -->
+
+            <?php if ($total > 0): ?>
+
+
+                <div class="cart-summary">
+
+
+                    <div class="summary-header">
+
+                        <span class="section-label">
+                            ORDER SUMMARY
+                        </span>
+
+                        <h2>
+                            Your Order
+                        </h2>
+
+                    </div>
+
+
+                    <div class="summary-line">
+
+                        <span>
+                            Products
+                        </span>
+
+                        <span>
+                            Included
+                        </span>
+
+                    </div>
+
+
+                    <div class="summary-line">
+
+                        <span>
+                            Delivery
+                        </span>
+
+                        <span class="free">
+                            Student Friendly
+                        </span>
+
+                    </div>
+
+
+                    <div class="summary-line">
+
+                        <span>
+                            Platform
+                        </span>
+
+                        <span>
+                            CampusKart
+                        </span>
+
+                    </div>
+
+
+                    <div class="summary-divider"></div>
+
+
+                    <div class="summary-total">
+
+                        <span>
+                            Total
+                        </span>
 
                         <strong>
 
                             ₹<?= number_format(
-                                $subtotal,
+                                $total,
                                 2
                             ) ?>
 
                         </strong>
 
+                    </div>
 
-                        <br>
+
+                    <a
+                        href="checkout.php"
+                        class="btn checkout-btn"
+                    >
+                        Proceed to Checkout →
+                    </a>
 
 
-                        <a
-                            href="cart.php?remove=<?= (int)$id ?>"
-                            class="remove"
-                            onclick="return confirm('Remove this product from cart?')"
-                        >
-                            Remove
-                        </a>
+                    <div class="secure-checkout">
 
+                        🔒
+
+                        <span>
+                            Secure and simple checkout
+                        </span>
 
                     </div>
 
@@ -357,68 +600,266 @@ $total = 0;
                 </div>
 
 
-            <?php endforeach; ?>
+            <?php else: ?>
+
+
+                <!-- ==================================
+                     CART BECAME EMPTY
+                ================================== -->
+
+                <div class="empty-cart">
+
+                    <div class="empty-cart-icon">
+                        🛒
+                    </div>
+
+                    <h2>
+                        Your Cart is Empty
+                    </h2>
+
+                    <p>
+                        The products in your cart are
+                        no longer available.
+                    </p>
+
+                    <a
+                        href="product.php"
+                        class="btn"
+                    >
+                        Start Shopping →
+                    </a>
+
+                </div>
+
+
+            <?php endif; ?>
 
 
         </div>
-
-
-        <?php if ($total > 0): ?>
-
-
-            <div class="cart-total">
-
-
-                <h2>
-
-                    Total:
-
-                    ₹<?= number_format(
-                        $total,
-                        2
-                    ) ?>
-
-                </h2>
-
-
-                <a
-                    href="checkout.php"
-                    class="btn"
-                >
-                    Proceed to Checkout
-                </a>
-
-
-            </div>
-
-
-        <?php else: ?>
-
-
-            <div class="empty-cart">
-
-                <h2>
-                    Your cart is empty 🛒
-                </h2>
-
-
-                <a
-                    href="product.php"
-                    class="btn"
-                >
-                    Start Shopping
-                </a>
-
-            </div>
-
-
-        <?php endif; ?>
 
 
     <?php endif; ?>
 
 
 </section>
+
+
+
+<!-- ==========================================
+     WHY CAMPUSKART
+========================================== -->
+
+<section class="cart-benefits">
+
+
+    <div class="cart-benefits-heading">
+
+        <span class="section-label">
+            SHOP WITH CONFIDENCE
+        </span>
+
+        <h2>
+            Why Students Choose
+            <span>CampusKart</span>
+        </h2>
+
+    </div>
+
+
+    <div class="benefit-grid">
+
+
+        <div class="benefit-card">
+
+            <div class="benefit-icon">
+                🎓
+            </div>
+
+            <h3>
+                Made For Students
+            </h3>
+
+            <p>
+                Products selected with everyday
+                college life in mind.
+            </p>
+
+        </div>
+
+
+        <div class="benefit-card">
+
+            <div class="benefit-icon">
+                💰
+            </div>
+
+            <h3>
+                Affordable
+            </h3>
+
+            <p>
+                Get useful campus essentials
+                at student-friendly prices.
+            </p>
+
+        </div>
+
+
+        <div class="benefit-card">
+
+            <div class="benefit-icon">
+                🚚
+            </div>
+
+            <h3>
+                Easy Shopping
+            </h3>
+
+            <p>
+                Select your products and complete
+                your order with ease.
+            </p>
+
+        </div>
+
+
+        <div class="benefit-card">
+
+            <div class="benefit-icon">
+                🔒
+            </div>
+
+            <h3>
+                Simple & Secure
+            </h3>
+
+            <p>
+                A straightforward shopping
+                experience for campus life.
+            </p>
+
+        </div>
+
+
+    </div>
+
+
+</section>
+
+
+
+<!-- ==========================================
+     FOOTER
+========================================== -->
+
+<footer>
+
+
+    <div class="footer-container">
+
+
+        <div class="footer-brand">
+
+            <h2>
+                Campus<span>Kart</span>
+            </h2>
+
+            <p>
+                Your student marketplace for affordable,
+                useful and reliable campus essentials.
+            </p>
+
+        </div>
+
+
+        <div class="footer-column">
+
+            <h3>
+                Quick Links
+            </h3>
+
+            <a href="index.php">
+                Home
+            </a>
+
+            <a href="product.php">
+                Products
+            </a>
+
+            <a href="cart.php">
+                Cart
+            </a>
+
+        </div>
+
+
+        <div class="footer-column">
+
+            <h3>
+                Categories
+            </h3>
+
+            <p>
+                Stationery
+            </p>
+
+            <p>
+                Electronics
+            </p>
+
+            <p>
+                Fashion
+            </p>
+
+            <p>
+                Bags
+            </p>
+
+        </div>
+
+
+        <div class="footer-column">
+
+            <h3>
+                CampusKart
+            </h3>
+
+            <p>
+                Student Focused
+            </p>
+
+            <p>
+                Affordable
+            </p>
+
+            <p>
+                Easy Shopping
+            </p>
+
+            <p>
+                Quality Products
+            </p>
+
+        </div>
+
+
+    </div>
+
+
+    <div class="footer-bottom">
+
+        <p>
+            © 2026 CampusKart
+        </p>
+
+        <p>
+            Student E-Commerce Platform
+        </p>
+
+    </div>
+
+
+</footer>
 
 
 </body>
